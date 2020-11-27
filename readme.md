@@ -1,6 +1,6 @@
-# PAPAB - impact study - Burundi 2019/2020
+# COVID 19- impact of Covid-19 migrant workers - LAOS
 
-Code to reproduce analyses and visuals for PAPAB impact study Burundi 2020 published here <add link> --> add link to report here. 
+Code to reproduce analyses and visuals for Covid 19 impacts on migrant workers LAOS published here <add link> --> add link to report here. 
 
 # Technologies
 Project is created with: 
@@ -8,19 +8,19 @@ Project is created with:
 - Python 3.8.0 
 
 # Data
-Source data for this project not public (as of June 2020) available on request.
+Source data for this project not public (as of Nov 2020) available on request.
 
 # Structure
 ```
 ├───docs                    <- data documentation, questionnaire other relevant docs
 │   
-├───notebooks               <-notebooks for EDA, code snippets, temporary code prior to publication.  
+│          
 │   
 │      
 │      
 │      
 │   
-└───src                     <-.do (cleaning & PSM models (STATA) .py (visualisations) 
+└───src                     <-.do (cleaning .py (visualisations) 
     ├───data                 
     │   ├───clean           <-Final datasets used for report generation  
     │   ├───interim         <-intermediate data that has been transformed 
