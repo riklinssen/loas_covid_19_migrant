@@ -136,15 +136,15 @@ fig.savefig(graphs_path/'group_descr.svg', bbox_inches='tight')
 
 
 # socio demographic profile.
-groupnames = ['Men', 'Women', 'Cross-\nborder\nmigrants', 'Internal\nmigrants',
-              'Non-\nmigrants', 'Formal\nworkers', 'Informal\nworkers', 'Total']
 
+groupnames={'Male':'Men', 'Female': 'Women', 'Non-migrant':'Non-\nmigrants' , 'Internal migrant': 'Internal\nmigrants' ,
+       'Cross-border migrant':'Cross-\nborder\nmigrants', 'Formal workers':'Formal\nworkers', 'Informal workers':'Informal\nworkers', 'Total':'Total'}
 gr_title_coldict = {
-    'Men': '#0B9CDA',
-    'Women': '#53297D',
-    'Cross-border migrants': '#630235',
-    'Internal migrants': '#0C884A',
-    'Non-migrants': '#E70052',
+    'Male': '#0B9CDA',
+    'Female': '#53297D',
+    'Cross-border migrant': '#630235',
+    'Internal migrant': '#0C884A',
+    'Non-migrant': '#E70052',
     'Formal workers': '#61A534',
     'Informal workers': '#F16E22',
     'Total': '#000000'
@@ -176,16 +176,21 @@ def outcome_bygroup_df(df, outcomes, groupbyvars):
         df with outcomes in rows, groupbyvars in cols, proportions in cells
     """
     colselect = groupbyvars + outcomes
+    colnames=[]
     bygender = df.loc[:, colselect].groupby('group_gender')[outcomes].mean().T
+    colnames.extend(list(bygender.columns))
     bymigrant = df.loc[:, colselect].groupby('group_migrant')[
         outcomes].mean().T
+    colnames.extend(list(bymigrant.columns))
     byinformal = df.loc[:, colselect].groupby('group_informal')[
         outcomes].mean().T
+    colnames.extend(list(byinformal.columns))
     bytotal = df.loc[:, colselect].groupby('Total')[outcomes].mean().T
-
+    colnames.extend(list(bytotal.columns))
     data = pd.concat([bygender, bymigrant, byinformal,
                       bytotal], axis=1, ignore_index=True)
-    data.columns = gr_title_coldict.keys()
+    
+    data.columns=colnames
     data['label'] = varlabel_df.loc[outcomes]
     data = data.set_index('label')
     return data
@@ -194,14 +199,15 @@ def outcome_bygroup_df(df, outcomes, groupbyvars):
 
 
 groupbyvars = [c for c in clean.columns if c.startswith('group')]+['Total']
+
 sns.set_style('white')
 fig, axes = plt.subplots(nrows=4, ncols=8, sharey='row', sharex='col', figsize=(
     6.25, 6), gridspec_kw={'height_ratios': [1, 7, 5,6]})
 titleaxes = fig.axes[:8]
 # title row.
-for i, (ax, group, clr) in enumerate(zip(titleaxes, groupnames, gr_title_coldict.values())):
+for i, (ax, group) in enumerate(zip(titleaxes, groupnames.keys())):
     ax = titleaxes[i]
-    ax.annotate(group, **title_anno_opts, color=clr)
+    ax.annotate(groupnames[group], **title_anno_opts, color=gr_title_coldict[group])
     # remove spines
     ax.axis('off')
 
@@ -209,10 +215,11 @@ for i, (ax, group, clr) in enumerate(zip(titleaxes, groupnames, gr_title_coldict
 educaxes = fig.axes[8:16]
 educ = [c for c in clean.columns if c.startswith('out_educ_')]
 data = outcome_bygroup_df(clean, educ, groupbyvars)
-for i, (ax, group, clr) in enumerate(zip(educaxes, data.columns, gr_title_coldict.values())):
+for i, (ax, group) in enumerate(zip(educaxes, data.columns)):
     ax = educaxes[i]
     ax.set_xlim(0, 1)
-    ax.barh(y=data.index, width=data[group], color=clr)
+    ax.barh(y=data.index, width=data[group], color=gr_title_coldict[group])
+    # remove spines)
     # labels
     for p in ax.patches:
         # get_width pulls left or right; get_y pushes up or down
@@ -234,10 +241,11 @@ maritalaxes = fig.axes[16:24]
 marital = ['out_marital_1', 'out_marital_2',
            'out_marital_3', 'out_marital_4', 'out_marital_5']
 data = outcome_bygroup_df(clean, marital, groupbyvars)
-for i, (ax, group, clr) in enumerate(zip(maritalaxes, data.columns, gr_title_coldict.values())):
+for i, (ax, group) in enumerate(zip(maritalaxes, data.columns)):
     ax = maritalaxes[i]
     ax.set_xlim(0, 1)
-    ax.barh(y=data.index, width=data[group], color=clr)
+    ax.barh(y=data.index, width=data[group], color=gr_title_coldict[group])
+    # remove spines)
     # labels
     for p in ax.patches:
         # get_width pulls left or right; get_y pushes up or down
@@ -263,10 +271,10 @@ agecats = ['out_age_1',
            'out_age_5',
            'out_age_6']
 data = outcome_bygroup_df(clean, agecats, groupbyvars)
-for i, (ax, group, clr) in enumerate(zip(ageaxes, data.columns, gr_title_coldict.values())):
+for i, (ax, group) in enumerate(zip(ageaxes, data.columns)):
     ax = ageaxes[i]
     ax.set_xlim(0, 1)
-    ax.barh(y=data.index, width=data[group], color=clr)
+    ax.barh(y=data.index, width=data[group], color=gr_title_coldict[group])
     # labels
     for p in ax.patches:
         # get_width pulls left or right; get_y pushes up or down
@@ -297,19 +305,20 @@ fig, axes = plt.subplots(nrows=3, ncols=8, sharey='row', sharex='col', figsize=(
     6.25, 4), gridspec_kw={'height_ratios': [1, 2, 3]})
 titleaxes = fig.axes[:8]
 # title row.
-for i, (ax, group, clr) in enumerate(zip(titleaxes, groupnames, gr_title_coldict.values())):
+for i, (ax, group) in enumerate(zip(titleaxes, groupnames.keys())):
     ax = titleaxes[i]
-    ax.annotate(group, **title_anno_opts, color=clr)
+    ax.annotate(groupnames[group], **title_anno_opts, color=gr_title_coldict[group])
     # remove spines
     ax.axis('off')
+
 #out_hh_origin
 originaxes=fig.axes[8:16]
 hhorigin = ['out_hh_origin_1','out_hh_origin_2']
 data = outcome_bygroup_df(clean, hhorigin, groupbyvars)
-for i, (ax, group, clr) in enumerate(zip(originaxes, data.columns, gr_title_coldict.values())):
+for i, (ax, group) in enumerate(zip(originaxes, data.columns)):
     ax = originaxes[i]
     ax.set_xlim(0, 1)
-    ax.barh(y=data.index, width=data[group], color=clr)
+    ax.barh(y=data.index, width=data[group], color=gr_title_coldict[group])
     # labels
     for p in ax.patches:
         # get_width pulls left or right; get_y pushes up or down
@@ -332,10 +341,10 @@ out_migrant = ['out_migrant_1',
 'out_migrant_2',
 'out_migrant_3']
 data = outcome_bygroup_df(clean, out_migrant, groupbyvars)
-for i, (ax, group, clr) in enumerate(zip(out_migrantaxes, data.columns, gr_title_coldict.values())):
+for i, (ax, group) in enumerate(zip(out_migrantaxes, data.columns)):
     ax = out_migrantaxes[i]
     ax.set_xlim(0, 1)
-    ax.barh(y=data.index, width=data[group], color=clr)
+    ax.barh(y=data.index, width=data[group], color=gr_title_coldict[group])
     # labels
     for p in ax.patches:
         # get_width pulls left or right; get_y pushes up or down
@@ -377,19 +386,19 @@ fig, axes = plt.subplots(nrows=2, ncols=8, sharey='row', sharex='col', figsize=(
     6.25, 3), gridspec_kw={'height_ratios': [1, 7]})
 titleaxes = fig.axes[:8]
 # title row.
-for i, (ax, group, clr) in enumerate(zip(titleaxes, groupnames, gr_title_coldict.values())):
+for i, (ax, group) in enumerate(zip(titleaxes, groupnames.keys())):
     ax = titleaxes[i]
-    ax.annotate(group, **title_anno_opts, color=clr)
+    ax.annotate(groupnames[group], **title_anno_opts, color=gr_title_coldict[group])
     # remove spines
     ax.axis('off')
 
 outcomeaxis1=fig.axes[8:16]
 
 data = outcome_bygroup_df(clean, outcomes1, groupbyvars)
-for i, (ax, group, clr) in enumerate(zip(outcomeaxis1, data.columns, gr_title_coldict.values())):
+for i, (ax, group) in enumerate(zip(outcomeaxis1, data.columns)):
     ax = outcomeaxis1[i]
     ax.set_xlim(0, 1)
-    ax.barh(y=data.index, width=data[group], color=clr)
+    ax.barh(y=data.index, width=data[group], color=gr_title_coldict[group])
     # labels
     for p in ax.patches:
         # get_width pulls left or right; get_y pushes up or down
@@ -477,19 +486,19 @@ fig, axes = plt.subplots(nrows=2, ncols=8, sharey='row', sharex='col', figsize=(
     6.25, 3), gridspec_kw={'height_ratios': [1, 9]})
 titleaxes = fig.axes[:8]
 # title row.
-for i, (ax, group, clr) in enumerate(zip(titleaxes, groupnames, gr_title_coldict.values())):
+for i, (ax, group) in enumerate(zip(titleaxes, groupnames.keys())):
     ax = titleaxes[i]
-    ax.annotate(group, **title_anno_opts, color=clr)
+    ax.annotate(groupnames[group], **title_anno_opts, color=gr_title_coldict[group])
     # remove spines
     ax.axis('off')
 
 outcomeaxis1=fig.axes[8:16]
 
 data = outcome_bygroup_df(clean, outcomes1, groupbyvars)
-for i, (ax, group, clr) in enumerate(zip(outcomeaxis1, data.columns, gr_title_coldict.values())):
+for i, (ax, group) in enumerate(zip(outcomeaxis1, data.columns)):
     ax = outcomeaxis1[i]
     ax.set_xlim(0, 1)
-    ax.barh(y=data.index, width=data[group], color=clr)
+    ax.barh(y=data.index, width=data[group], color=gr_title_coldict[group])
     # labels
     for p in ax.patches:
         # get_width pulls left or right; get_y pushes up or down
@@ -525,18 +534,18 @@ outcomes1=['av_dependants_origin'] ##dependents origin
 outcomes2=['av_dependants_destination'] ##dependants destination
 fig, axes = plt.subplots(nrows=3, ncols=8, sharey='row', sharex='col', figsize=(
     6.25, 3), gridspec_kw={'height_ratios': [1, 0.5, 0.5]})
+
 # title row.
 titleaxes = fig.axes[:8]
-
-for i, (ax, group, clr) in enumerate(zip(titleaxes, groupnames, gr_title_coldict.values())):
+for i, (ax, group) in enumerate(zip(titleaxes, groupnames.keys())):
     ax = titleaxes[i]
-    ax.annotate(group, **title_anno_opts, color=clr)
+    ax.annotate(groupnames[group], **title_anno_opts, color=gr_title_coldict[group])
     # remove spines
     ax.axis('off')
 
 outcomeaxis1=fig.axes[8:16]
 data = outcome_bygroup_df(clean, outcomes1, groupbyvars)
-for i, (ax, group, clr) in enumerate(zip(outcomeaxis1, data.columns, gr_title_coldict.values())):
+for i, (ax, group) in enumerate(zip(outcomeaxis1, data.columns)):
     ax = outcomeaxis1[i]
     # x-axis settings
     ax.set_xlim(0, 5)
@@ -544,28 +553,28 @@ for i, (ax, group, clr) in enumerate(zip(outcomeaxis1, data.columns, gr_title_co
     ax.set_yticklabels(['dependants\nat origin'])
 
     #plot
-    ax.scatter(y=data.index, x=data[group], s=8, color=clr)
-    ax.hlines(y=data.index, xmin=0, xmax=data[group], color=clr)
+    ax.scatter(y=data.index, x=data[group], s=8, color=gr_title_coldict[group])
+    ax.hlines(y=data.index, xmin=0, xmax=data[group], color=gr_title_coldict[group])
     # labels
     # get_width pulls left or right; get_y pushes up or down
-    ax.text(x=data[group][0]+0.4,y=data.index, s=str(round(data[group][0],1)), color=clr, verticalalignment='center', size='xx-small')
+    ax.text(x=data[group][0]+0.4,y=data.index, s=str(round(data[group][0],1)), color=gr_title_coldict[group], verticalalignment='center', size='xx-small')
     
     sns.despine(ax=ax)
 
 outcomeaxis2=fig.axes[16:24]
 data = outcome_bygroup_df(clean, outcomes2, groupbyvars)
-for i, (ax, group, clr) in enumerate(zip(outcomeaxis1, data.columns, gr_title_coldict.values())):
+for i, (ax, group) in enumerate(zip(outcomeaxis1, data.columns)):
     ax = outcomeaxis2[i]
     # x-axis settings
     ax.set_xlim(0, 5)
     #yticklabel
     ax.set_yticklabels(['dependants\nat destination'])
     #plot
-    ax.scatter(y=data.index, x=data[group], s=8, color=clr)
-    ax.hlines(y=data.index, xmin=0, xmax=data[group], color=clr)
+    ax.scatter(y=data.index, x=data[group], s=8, color=gr_title_coldict[group])
+    ax.hlines(y=data.index, xmin=0, xmax=data[group], color=gr_title_coldict[group])
     # labels
     # get_width pulls left or right; get_y pushes up or down
-    ax.text(x=data[group][0]+0.4,y=data.index, s=str(round(data[group][0],1)), color=clr, verticalalignment='center', size='xx-small')
+    ax.text(x=data[group][0]+0.4,y=data.index, s=str(round(data[group][0],1)), color=gr_title_coldict[group], verticalalignment='center', size='xx-small')
     
     ax.set_xlabel('avg\nno.\nof people', size='x-small', color='gray')
     #ax.xaxis.set_major_formatter(PercentFormatter(xmax=1))
@@ -575,7 +584,6 @@ for i, (ax, group, clr) in enumerate(zip(outcomeaxis1, data.columns, gr_title_co
         label.set_rotation(0)
         label.set_size('x-small')
     sns.despine(ax=ax)
-
 fig.align_ylabels(fig.axes)
 fig.subplots_adjust(hspace = 0.1)
 fig.savefig(graphs_path/'dependants_origin_dest.svg', bbox_inches='tight')
@@ -599,19 +607,19 @@ fig, axes = plt.subplots(nrows=2, ncols=8, sharey='row', sharex='col', figsize=(
     6.25, 3), gridspec_kw={'height_ratios': [1, 5]})
 titleaxes = fig.axes[:8]
 # title row.
-for i, (ax, group, clr) in enumerate(zip(titleaxes, groupnames, gr_title_coldict.values())):
+for i, (ax, group) in enumerate(zip(titleaxes, groupnames.keys())):
     ax = titleaxes[i]
-    ax.annotate(group, **title_anno_opts, color=clr)
+    ax.annotate(groupnames[group], **title_anno_opts, color=gr_title_coldict[group])
     # remove spines
     ax.axis('off')
 
 outcomeaxis1=fig.axes[8:16]
 
 data = outcome_bygroup_df(clean, outcomes1, groupbyvars)
-for i, (ax, group, clr) in enumerate(zip(outcomeaxis1, data.columns, gr_title_coldict.values())):
+for i, (ax, group) in enumerate(zip(outcomeaxis1, data.columns)):
     ax = outcomeaxis1[i]
     ax.set_xlim(0, 1)
-    ax.barh(y=data.index, width=data[group], color=clr)
+    ax.barh(y=data.index, width=data[group],color=gr_title_coldict[group])
     # labels
     for p in ax.patches:
         # get_width pulls left or right; get_y pushes up or down
