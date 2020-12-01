@@ -874,14 +874,14 @@ fig.savefig(graphs_path/'out_cope_covid.svg', bbox_inches='tight')
 
 
 
-#out_hh_cope_covid
+#out_coverage_unemp
 
 outcomes=['out_coverage_unemp_1',
 'out_coverage_unemp_2',
 'out_coverage_unemp_3',
 'out_coverage_unemp_4']
 
-filename=graphs_path/'out_hh_cope_covid.svg'
+filename=graphs_path/'out_coverage_unemp.svg'
 data=outcome_bygroup_df(clean, outcomes, groupbyvars)
 category_names=list(data.index)
 results=data.dropna(axis=1, how='all').to_dict(orient='list')
@@ -889,11 +889,6 @@ print(results)
 fig=survey(results, category_names)
 plt.savefig(filename, bbox_inches='tight')
 plt.show()
-
-
-
-
-
 
 
 
@@ -908,7 +903,6 @@ outcomes=['out_coverage_unemp_where_1',
 'out_coverage_unemp_where_2',
 'out_coverage_unemp_where_3']
 
-#nans in columns
 filename=graphs_path/'out_coverage_unemp_where_.svg'
 data=outcome_bygroup_df(clean, outcomes, groupbyvars)
 category_names=list(data.index)
@@ -919,8 +913,349 @@ plt.savefig(filename, bbox_inches='tight')
 plt.show()
 
 
+
+#out_coverage_unemp_comp
+outcomes=['out_coverage_unemp_comp_1',
+'out_coverage_unemp_comp_2']
+
+
+#nans in columns
+filename=graphs_path/'out_coverage_unemp_comp.svg'
+data=outcome_bygroup_df(clean, outcomes, groupbyvars)
+category_names=list(data.index)
+results=data.dropna(axis=1, how='all').to_dict(orient='list')
+print(results)
+fig=survey(results, category_names)
+plt.savefig(filename, bbox_inches='tight')
+plt.show()
+
+
+#out_coverage_unemp_enough
+
+outcomes=['out_coverage_unemp_enough_1',
+'out_coverage_unemp_enough_2']
+
+
+#nans in columns
+filename=graphs_path/'out_coverage_unemp_enough.svg'
+data=outcome_bygroup_df(clean, outcomes, groupbyvars)
+category_names=list(data.index)
+results=data.dropna(axis=1, how='all').to_dict(orient='list')
+print(results)
+fig=survey(results, category_names)
+plt.savefig(filename, bbox_inches='tight')
+plt.show()
+
+
+#out_coverage_health
+
+outcomes=['out_coverage_health_1',
+'out_coverage_health_2', 'out_coverage_health_3', 'out_coverage_health_4']
+
+
+#nans in columns
+filename=graphs_path/'out_coverage_health.svg'
+data=outcome_bygroup_df(clean, outcomes, groupbyvars)
+category_names=list(data.index)
+results=data.dropna(axis=1, how='all').to_dict(orient='list')
+print(results)
+fig=survey(results, category_names)
+plt.savefig(filename, bbox_inches='tight')
+plt.show()
+
+
+#out_coverage_health_where
+
+
+outcomes=['out_coverage_health_where_1','out_coverage_health_where_2']
+
+
+#nans in columns
+filename=graphs_path/'out_coverage_health_where.svg'
+data=outcome_bygroup_df(clean, outcomes, groupbyvars)
+category_names=list(data.index)
+results=data.dropna(axis=1, how='all').to_dict(orient='list')
+print(results)
+fig=survey(results, category_names)
+plt.savefig(filename, bbox_inches='tight')
+plt.show()
+
+#out_coverage_health_use
+
+outcomes=['out_coverage_health_use_1','out_coverage_health_use_2']
+
+filename=graphs_path/'out_coverage_health_use.svg'
+data=outcome_bygroup_df(clean, outcomes, groupbyvars)
+category_names=list(data.index)
+results=data.dropna(axis=1, how='all').to_dict(orient='list')
+print(results)
+fig=survey(results, category_names)
+plt.savefig(filename, bbox_inches='tight')
+plt.show()
+
+
+
+#out_coverage_health_quality
+
+
+outcomes=['out_coverage_health_quality_1',
+'out_coverage_health_quality_2',
+'out_coverage_health_quality_3',
+'out_coverage_health_quality_4']
+
+
+filename=graphs_path/'out_coverage_health_quality.svg'
+data=outcome_bygroup_df(clean, outcomes, groupbyvars)
+category_names=list(data.index)
+results=data.dropna(axis=1, how='all').to_dict(orient='list')
+print(results)
+fig=survey(results, category_names)
+plt.savefig(filename, bbox_inches='tight')
+plt.show()
+
+
+#out_coverage_sickleave
+
+
+outcomes=['out_coverage_sickleave_1', 
+'out_coverage_sickleave_2',
+'out_coverage_sickleave_3',
+'out_coverage_sickleave_4']
+
+
+filename=graphs_path/'out_coverage_sickleave.svg'
+data=outcome_bygroup_df(clean, outcomes, groupbyvars)
+category_names=list(data.index)
+results=data.dropna(axis=1, how='all').to_dict(orient='list')
+print(results)
+fig=survey(results, category_names)
+plt.savefig(filename, bbox_inches='tight')
+plt.show()
+
+
+#out_diff_foods_cope
+outcomes=['out_diff_foods_cope_1', 'out_diff_foods_cope_2']
+
+filename=graphs_path/'out_diff_foods_cope.svg'
+data=outcome_bygroup_df(clean, outcomes, groupbyvars)
+category_names=list(data.index)
+results=data.dropna(axis=1, how='all').to_dict(orient='list')
+print(results)
+fig=survey(results, category_names)
+plt.savefig(filename, bbox_inches='tight')
+plt.show()
+
+#out_diff_foods
+
+
+
+outcomes1=['out_diff_foods_1',
+'out_diff_foods_2',
+'out_diff_foods_3',
+'out_diff_foods_4',
+'out_diff_foods_5',
+'out_diff_foods_6',
+'out_diff_foods_7']
+
+
+for c in outcomes1:
+    print(clean[c].cat.codes.value_counts(dropna=False))
+    clean[c]=clean[c].cat.codes.map({-1:np.nan,0:0, 1:1})
+
+
+fig, axes = plt.subplots(nrows=2, ncols=8, sharey='row', sharex='col', figsize=(
+    6.25, 3), gridspec_kw={'height_ratios': [1, 7]})
+titleaxes = fig.axes[:8]
+# title row.
+for i, (ax, group) in enumerate(zip(titleaxes, groupnames.keys())):
+    ax = titleaxes[i]
+    ax.annotate(groupnames[group], **title_anno_opts, color=gr_title_coldict[group])
+    # remove spines
+    ax.axis('off')
+
+outcomeaxis1=fig.axes[8:16]
+
+data = outcome_bygroup_df(clean, outcomes1, groupbyvars)
+for i, (ax, group) in enumerate(zip(outcomeaxis1, data.columns)):
+    ax = outcomeaxis1[i]
+    ax.set_xlim(0, 1)
+    ax.barh(y=data.index, width=data[group], color=gr_title_coldict[group])
+    # labels
+    for p in ax.patches:
+        # get_width pulls left or right; get_y pushes up or down
+        ax.text(p.get_width()+0.05, p.get_y()+0.5, "{:.0%}".format(
+            p.get_width()), color=p.get_facecolor(), verticalalignment='top', size='xx-small')
+    if i == 0:
+        ax.set_ylabel('different foods:', fontstyle='oblique')
+    # x-axis settings
+    ax.set_xlim(0, 1)
+    ax.xaxis.set_major_formatter(PercentFormatter(xmax=1))
+    # ticklabels
+    for label in ax.get_xticklabels():
+        label.set_ha("center")
+        label.set_rotation(90)
+        label.set_size('x-small')
+    sns.despine(ax=ax)
+
+fig.align_ylabels(fig.axes)
+#footnote
+fig.text(0, -0.1, "Source: Socio-economic impacts of COVID-19 among (in)formal migrant workers in Laos, total n=" +
+            str(len(clean['out_diff_foods_7']))+".", size='x-small',  ha="left", color='gray')
+fig.subplots_adjust(wspace = 0.5)
+fig.savefig(graphs_path/'out_diff_foods.svg', bbox_inches='tight')
+
+
+
+
+#out_cope_nonfinance_who
+outcomes=['out_cope_nonfinance_who_1', 'out_cope_nonfinance_who_2', 'out_cope_nonfinance_who_3', 'out_cope_nonfinance_who_4']
+
+for c in outcomes:
+    print(clean[c].cat.codes.value_counts(dropna=False))
+    clean[c]=clean[c].cat.codes.map({-1:np.nan,0:0, 1:1})
+
+
+filename=graphs_path/'out_cope_nonfinance_who.svg'
+data=outcome_bygroup_df(clean, outcomes, groupbyvars)
+category_names=list(data.index)
+results=data.dropna(axis=1, how='all').to_dict(orient='list')
+print(results)
+fig=survey(results, category_names)
+plt.savefig(filename, bbox_inches='tight')
+plt.show()
+
+
+
+#out_cope_borrow_who
+
+outcomes=['out_cope_borrow_who_1',
+'out_cope_borrow_who_2',
+'out_cope_borrow_who_3',
+'out_cope_borrow_who_4',
+'out_cope_borrow_who_5']
+
+
+for c in outcomes:
+    print(clean[c].cat.codes.value_counts(dropna=False))
+    clean[c]=clean[c].cat.codes.map({-1:np.nan,0:0, 1:1})
+
+
+filename=graphs_path/'out_cope_borrow_who.svg'
+data=outcome_bygroup_df(clean, outcomes, groupbyvars)
+category_names=list(data.index)
+results=data.dropna(axis=1, how='all').to_dict(orient='list')
+print(results)
+fig=survey(results, category_names)
+plt.savefig(filename, bbox_inches='tight')
+plt.show()
+
+#out_outlook_opp
+
+outcomes=['out_outlook_opp_1',
+'out_outlook_opp_2',
+'out_outlook_opp_3']
+
+
+
+filename=graphs_path/'out_outlook_opp.svg'
+data=outcome_bygroup_df(clean, outcomes, groupbyvars)
+category_names=list(data.index)
+results=data.dropna(axis=1, how='all').to_dict(orient='list')
+print(results)
+fig=survey(results, category_names)
+plt.savefig(filename, bbox_inches='tight')
+plt.show()
+
+#out_outlook_inc
+
+outcomes=['out_outlook_inc_1',
+'out_outlook_inc_2',
+'out_outlook_inc_3']
+
+
+
+filename=graphs_path/'out_outlook_inc.svg'
+data=outcome_bygroup_df(clean, outcomes, groupbyvars)
+category_names=list(data.index)
+results=data.dropna(axis=1, how='all').to_dict(orient='list')
+print(results)
+fig=survey(results, category_names)
+plt.savefig(filename, bbox_inches='tight')
+plt.show()
+
+#out_outlook_migration
+outcomes=['out_outlook_migration_1',
+'out_outlook_migration_2',
+'out_outlook_migration_3',
+'out_outlook_migration_4',
+'out_outlook_migration_5']
+
+
+
+
+filename=graphs_path/'out_outlook_migration.svg'
+data=outcome_bygroup_df(clean, outcomes, groupbyvars)
+category_names=list(data.index)
+results=data.dropna(axis=1, how='all').to_dict(orient='list')
+print(results)
+fig=survey(results, category_names)
+plt.savefig(filename, bbox_inches='tight')
+plt.show()
+
+
+
+
+
+
+
+
+
+
+
+
+#5.4.3 NEEDS OF SOCIAL SERVICES
+#vartoviz loop
+
+vartoviz=['out_needs_socialserv_money_', 'out_needs_socialserv_food_', 'out_needs_socialserv_health_', 'out_needs_socialserv_credit_', 'out_needs_socialserv_serv_', 'out_needs_socialserv_migration_', 'out_needs_socialserv_women_', 'out_needs_socialserv_other_']
+for var in vartoviz: 
+    outcomes=[o for o in varlabel_df.index if o.startswith(var)]
+    print(outcomes)
+    filname1=str(outcomes[0])[:-2]+".svg"
+    filename=graphs_path/filname1
+    data=outcome_bygroup_df(clean, outcomes, groupbyvars)
+    category_names=list(data.index)
+    results=data.to_dict(orient='list')
+    try:
+        fig=survey(results, category_names)
+        plt.savefig(filename, bbox_inches='tight')
+        plt.show()
+    except ValueError as error:
+        print(error)
+        print(var)
+
+#•	How would you rate the importance of these providers of social services when preparing better for a situation such as COVID?
+vartoviz=['out_prov_socialserv_gov_', 'out_prov_socialserv_employer_', 'out_prov_socialserv_cso_', 'out_prov_socialserv_union_', 'out_prov_socialserv_other_']
+
+for var in vartoviz: 
+    outcomes=[o for o in varlabel_df.index if o.startswith(var)]
+    print(outcomes)
+    filname1=str(outcomes[0])[:-2]+".svg"
+    filename=graphs_path/filname1
+    data=outcome_bygroup_df(clean, outcomes, groupbyvars)
+    category_names=list(data.index)
+    results=data.to_dict(orient='list')
+    try:
+        fig=survey(results, category_names)
+        plt.savefig(filename, bbox_inches='tight')
+        plt.show()
+    except ValueError as error:
+        print(error)
+        print(var)
+
+
+
 #out_coverage_unemp_where_1
-outcomes=['out_coverage_unemp_where_1',
+outcomes=[
 'out_coverage_unemp_where_2',
 'out_coverage_unemp_where_3']
 
@@ -933,7 +1268,6 @@ print(results)
 fig=survey(results, category_names)
 plt.savefig(filename, bbox_inches='tight')
 plt.show()
-
 
 out_migration_unsafe_
 'out_remittances_', 'out_remittances_cease_', 'out_coverage_unemp_'

@@ -25,7 +25,9 @@ Source data for this project not public (as of Nov 2020) available on request.
     │   ├───clean           <-Final datasets used for report generation  
     │   ├───interim         <-intermediate data that has been transformed 
     │   └───raw             <-original data dump         
-    └───graphs              <-visualisations in report 
+    ├───graphs              <-visualisations in report 
+    ├───descriptive_stats.py   <-script to generate descriptive statistics in report
+    └───impact_visuals.py   <-script to generate impact/EDA statistics in report
 ```
 
 
