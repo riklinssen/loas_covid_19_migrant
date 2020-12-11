@@ -215,7 +215,7 @@ src/data/*/*
 graphs/*
 !graphs/.keep
 
-docs/*
-!docs/.keep
+docs/
+
 
 
