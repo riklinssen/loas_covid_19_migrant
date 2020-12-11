@@ -42,9 +42,8 @@ gr_coldict = {
     'Cross-border migrant': '#630235',
     'Internal migrant': '#0C884A',
     'Non-migrant': '#E70052',
-    'Formal workers': '#61A534',
-    'Informal workers': '#F16E22'
-}
+    'Formal employment': '#61A534', 
+    'Informal employment':  '#F16E22' }
 
 ##########################FIlEPATHS##########
 currentwd_path = Path.cwd()
@@ -93,7 +92,6 @@ def value_counts_df(df, col):
 
 
 groupvars = [c for c in clean if c.startswith('group')]
-data = value_counts_df(clean, 'group_gender')
 
 # groupvars as descriptives.
 
@@ -138,15 +136,16 @@ fig.savefig(graphs_path/'group_descr.svg', bbox_inches='tight')
 # socio demographic profile.
 
 groupnames={'Male':'Men', 'Female': 'Women', 'Non-migrant':'Non-\nmigrants' , 'Internal migrant': 'Internal\nmigrants' ,
-       'Cross-border migrant':'Cross-\nborder\nmigrants', 'Formal workers':'Formal\nworkers', 'Informal workers':'Informal\nworkers', 'Total':'Total'}
+       'Cross-border migrant':'Cross-border\nmigrants', 'Formal employment':'Formal\nemployment', 'Informal employment':'Informal\nemployment', 'Total':'Total'}
+
 gr_title_coldict = {
     'Male': '#0B9CDA',
     'Female': '#53297D',
     'Cross-border migrant': '#630235',
     'Internal migrant': '#0C884A',
     'Non-migrant': '#E70052',
-    'Formal workers': '#61A534',
-    'Informal workers': '#F16E22',
+    'Formal employment': '#61A534',
+    'Informal employment': '#F16E22',
     'Total': '#000000'
 }
 
@@ -295,7 +294,7 @@ fig.align_ylabels(fig.axes)
 
 #footnote
 fig.text(0, 0, "Source: Socio-economic impacts of COVID-19 among (in)formal migrant workers in Laos, total n=" +
-            str(len(clean['out_age_6']))+".", size='x-small',  ha="left", color='gray')
+            str(len(clean['out_age_6'].dropna()))+".", size='x-small',  ha="left", color='gray')
 
 fig.savefig(graphs_path/'demographics_educ_marital_age.svg', bbox_inches='tight')
 
@@ -365,7 +364,7 @@ for i, (ax, group) in enumerate(zip(out_migrantaxes, data.columns)):
 fig.align_ylabels(fig.axes)
 #footnote
 fig.text(0, 0, "Source: Socio-economic impacts of COVID-19 among (in)formal migrant workers in Laos, total n=" +
-            str(len(clean['out_migrant_3']))+".", size='x-small',  ha="left", color='gray')
+            str(len(clean['out_migrant_3'].dropna()))+".", size='x-small',  ha="left", color='gray')
 fig.subplots_adjust(wspace = 0.5)
 fig.savefig(graphs_path/'rural_urban_lived_outside_hhorigin.svg', bbox_inches='tight')
 
@@ -419,7 +418,7 @@ for i, (ax, group) in enumerate(zip(outcomeaxis1, data.columns)):
 fig.align_ylabels(fig.axes)
 #footnote
 fig.text(0, -0.1, "Source: Socio-economic impacts of COVID-19 among (in)formal migrant workers in Laos, total n=" +
-            str(len(clean['out_migrant_where_7']))+".", size='x-small',  ha="left", color='gray')
+            str(len(clean['out_migrant_where_7'].dropna()))+".", size='x-small',  ha="left", color='gray')
 fig.subplots_adjust(wspace = 0.5)
 fig.savefig(graphs_path/'out_migrant_where.svg', bbox_inches='tight')
 
@@ -586,6 +585,9 @@ for i, (ax, group) in enumerate(zip(outcomeaxis1, data.columns)):
     sns.despine(ax=ax)
 fig.align_ylabels(fig.axes)
 fig.subplots_adjust(hspace = 0.1)
+fig.text(0, -0.1, "Source: Socio-economic impacts of COVID-19 among (in)formal migrant workers in Laos, total n=" +
+            str(len(clean['av_dependants_destination'].dropna()))+".", size='x-small',  ha="left", color='gray')
+
 fig.savefig(graphs_path/'dependants_origin_dest.svg', bbox_inches='tight')
 
 
