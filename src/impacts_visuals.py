@@ -109,21 +109,6 @@ clean['Total'] = 'Total'
 groupbyvars = [c for c in clean.columns if c.startswith('group')]+['Total']
 
 
-groupnames={'Male':'Men', 'Female': 'Women', 'Non-migrant':'Non-\nmigrants' , 'Internal migrant': 'Internal\nmigrants' ,
-       'Cross-border migrant':'Cross-border\nmigrants', 'Formal employment':'Formal\nemployment', 'Informal employment':'Informal\nemployment', 'Total':'Total'}
-gr_title_coldict = {
-    'Male': '#0B9CDA',
-    'Female': '#53297D',
-    'Cross-border migrant': '#630235',
-    'Internal migrant': '#0C884A',
-    'Non-migrant': '#E70052',
-    'Total': '#000000',
-    'Formal workers': '#61A534', 
-    'Informal workers':  '#F16E22' }
-
-
-
-
 
 outcomecols=['out_employment_pre_cov_1',
 'out_employment_pre_cov_2',
@@ -688,18 +673,6 @@ clean['Total'] = 'Total'
 groupbyvars = [c for c in clean.columns if c.startswith('group')]+['Total']
 
 
-groupnames={'Male':'Men', 'Female': 'Women', 'Non-migrant':'Non-migrants' , 'Internal migrant': 'Internal migrants' ,
-       'Cross-border migrant':'Cross-border migrants', 'Formal workers':'Formal workers', 'Informal workers':'Informal workers', 'Total':'Total'}
-gr_title_coldict = {
-    'Male': '#0B9CDA',
-    'Female': '#53297D',
-    'Cross-border migrant': '#630235',
-    'Internal migrant': '#0C884A',
-    'Non-migrant': '#E70052',
-    'Formal workers': '#61A534',
-    'Informal workers': '#F16E22',
-    'Total': '#000000'
-}
 
 
 
@@ -754,7 +727,11 @@ def survey(results, category_names):
     fig, ax = plt.subplots(figsize=(9.2, 5))
     ax.invert_yaxis()
     ax.xaxis.set_visible(False)
-    ax.set_xlim(0, np.sum(data, axis=1).max())
+    axlim=np.sum(data, axis=1).max()
+    if axlim==np.nan:
+        ax.set_xlim(0,1 )
+    else: 
+        ax.set_xlim(0)
     #spines
     ax.spines['right'].set_visible(False)
     ax.spines['top'].set_visible(False)
@@ -786,17 +763,6 @@ def survey(results, category_names):
 
     fig.text(0, 0, "Source: Socio-economic impacts of COVID-19 among migrant workers in Laos,\ntotal n="+str(len(clean.loc[:,outcomes[-1]].dropna()))+".", size='x-small',  ha="left", color='gray')
     return fig, ax
-
-
-category_names=list(data.index)
-results=data.to_dict(orient='list')
-fig=survey(results, category_names)
-plt.savefig(graphs_path/'out_losejobs2.svg', bbox_inches='tight')
-plt.show()
-
-
-
-
 
 
 #now do for each var
@@ -1014,8 +980,8 @@ plt.savefig(filename, bbox_inches='tight')
 plt.show()
 
 ##better try different graph with many cats
-groupnames={'Male':'Men', 'Female': 'Women', 'Non-migrant':'Non-\nmigrants' , 'Internal migrant': 'Internal\nmigrants' ,
-       'Cross-border migrant':'Cross-border\nmigrants', 'Formal workers':'Formal\nworkers', 'Informal workers':'Informal\nworkers', 'Total':'Total'}
+# groupnames={'Male':'Men', 'Female': 'Women', 'Non-migrant':'Non-\nmigrants' , 'Internal migrant': 'Internal\nmigrants' ,
+#        'Cross-border migrant':'Cross-border\nmigrants', 'Formal workers':'Formal\nworkers', 'Informal workers':'Informal\nworkers', 'Total':'Total'}
 
 ###out_migrant_where
 outcomes1 = ['out_challenges_1',
@@ -1706,9 +1672,9 @@ plt.show()
 
 outcomes1=[c for c in clean if 'out_cope_remigration_' in c]
 print(outcomes1)
-for c in outcomes1:
-    print(clean[c].cat.codes.value_counts(dropna=False))
-    clean[c]=clean[c].cat.codes.map({-1:np.nan,0:0, 1:1})
+# for c in outcomes1:
+#     print(clean[c].cat.codes.value_counts(dropna=False))
+#     clean[c]=clean[c].cat.codes.map({-1:np.nan,0:0, 1:1})
 
 
 fig, axes = plt.subplots(nrows=2, ncols=8, sharey='row', sharex='col', figsize=(
@@ -1773,7 +1739,7 @@ for df in dfs:
 by_quint=pd.concat(dfs).pivot_table(index=['quintile_income_pre','group'])
 
 groupnames={'Male':'Men', 'Female': 'Women', 'Non-migrant':'Non-\nmigrants' , 'Internal migrant': 'Internal\nmigrants' ,
-       'Cross-border migrant':'Cross-border\nmigrants', 'Formal workers':'Formal\nworkers', 'Informal workers':'Informal\nworkers', 'Total':'Total', 'Formal employment': 'Formal\nemployment' , 'Informal employment': 'Informal\nemployment' }
+       'Cross-border migrant':'Cross-border\nmigrants', 'Total':'Total', 'Formal employment': 'Formal\nemployment' , 'Informal employment': 'Informal\nemployment' }
 gr_title_coldict = {
     'Male': '#0B9CDA',
     'Female': '#53297D',
@@ -1784,11 +1750,8 @@ gr_title_coldict = {
     'Informal workers': '#F16E22',
     'Total': '#000000',
     'Formal employment': '#61A534', 
-    'Informal employment':  '#F16E22', 
-    'Formal workers': '#61A534', 
-    'Informal workers':  '#F16E22' }
-
-
+    'Informal employment':  '#F16E22'}  
+    
 fig, axes = plt.subplots(nrows=2, ncols=8, sharey='row', figsize=(
     6.25, 3), gridspec_kw={'height_ratios': [1, 7]})
 titleaxes = fig.axes[:8]
@@ -1907,7 +1870,7 @@ clean['outlookgrouper']=clean['outlook_migration'].cat.codes.map({0: 'Re-migrate
 
 ##seperate graphs for values of outlookgrouper
 
-
+#total
 outcomes1=[c for c in clean if 'out_key_support_' in c]
 print(outcomes1)
 for c in outcomes1:
@@ -2108,20 +2071,188 @@ fig.savefig(graphs_path/'out_key_support_other.svg', bbox_inches='tight')
 ####outcomes='out_needs_socialserv_money_', 'out_needs_socialserv_food_', 'out_needs_socialserv_health_', 'out_needs_socialserv_credit_', 'out_needs_socialserv_serv_', 'out_needs_socialserv_migration_', 'out_needs_socialserv_women_', 'out_needs_socialserv_other_'
 ##seperate graphs for values of outlookgrouper
 
+#for total: 
+
+
 vartoviz=['out_needs_socialserv_money_', 'out_needs_socialserv_food_', 'out_needs_socialserv_health_', 'out_needs_socialserv_credit_', 'out_needs_socialserv_serv_', 'out_needs_socialserv_migration_', 'out_needs_socialserv_women_', 'out_needs_socialserv_other_']
 for var in vartoviz: 
     outcomes=[o for o in varlabel_df.index if o.startswith(var)]
     print(outcomes)
-    filname1=str(outcomes[0])[:-2]+".svg"
+    filname1=str(outcomes[0])[:-2]+"_total.svg"
     filename=graphs_path/filname1
     data=outcome_bygroup_df(clean, outcomes, groupbyvars)
     category_names=list(data.index)
     results=data.to_dict(orient='list')
     try:
         fig=survey(results, category_names)
+        plt.suptitle('Total')
         plt.savefig(filename, bbox_inches='tight')
+        
         plt.show()
     except ValueError as error:
         print(error)
         print(var)
 
+
+##remigrate
+vartoviz=['out_needs_socialserv_money_', 'out_needs_socialserv_food_', 'out_needs_socialserv_health_', 'out_needs_socialserv_credit_', 'out_needs_socialserv_serv_', 'out_needs_socialserv_migration_', 'out_needs_socialserv_women_', 'out_needs_socialserv_other_']
+for var in vartoviz: 
+    outcomes=[o for o in varlabel_df.index if o.startswith(var)]
+    print(outcomes)
+    filname1=str(outcomes[0])[:-2]+"_re_migrate.svg"
+    filename=graphs_path/filname1
+    data_sel=clean.loc[clean['outlookgrouper']=='Re-migrate',:]     
+    data=outcome_bygroup_df(data_sel, outcomes, groupbyvars)
+    category_names=list(data.index)
+    results=data.to_dict(orient='list')
+    fig=survey(results, category_names)
+    plt.suptitle('Re-migrate')
+    plt.savefig(filename, bbox_inches='tight')
+    plt.show()
+   
+
+
+
+##stay and get job
+vartoviz=['out_needs_socialserv_money_', 'out_needs_socialserv_food_', 'out_needs_socialserv_health_', 'out_needs_socialserv_credit_', 'out_needs_socialserv_serv_', 'out_needs_socialserv_migration_', 'out_needs_socialserv_women_', 'out_needs_socialserv_other_']
+for var in vartoviz: 
+    outcomes=[o for o in varlabel_df.index if o.startswith(var)]
+    print(outcomes)
+    filname1=str(outcomes[0])[:-2]+"_staygetjob.svg"
+    filename=graphs_path/filname1
+    data_sel=clean.loc[clean['outlookgrouper']=='Stay and get a job',:]     
+    data=outcome_bygroup_df(data_sel, outcomes, groupbyvars)
+    category_names=list(data.index)
+    results=data.to_dict(orient='list')
+    fig=survey(results, category_names)
+    plt.suptitle('Re-migrate')
+    plt.savefig(filename, bbox_inches='tight')
+    plt.show()
+
+
+##say and get a job
+vartoviz=['out_needs_socialserv_money_', 'out_needs_socialserv_food_', 'out_needs_socialserv_health_', 'out_needs_socialserv_credit_', 'out_needs_socialserv_serv_', 'out_needs_socialserv_migration_', 'out_needs_socialserv_women_', 'out_needs_socialserv_other_']
+for var in vartoviz: 
+    outcomes=[o for o in varlabel_df.index if o.startswith(var)]
+    print(outcomes)
+    filname1=str(outcomes[0])[:-2]+"_other.svg"
+    filename=graphs_path/filname1
+    data_sel=clean.loc[clean['outlookgrouper']=='Other',:]     
+    data=outcome_bygroup_df(data_sel, outcomes, groupbyvars)
+    category_names=list(data.index)
+    results=data.to_dict(orient='list')
+    fig=survey(results, category_names)
+    plt.suptitle('Other')
+    plt.savefig(filename, bbox_inches='tight')
+    plt.show()
+
+
+
+#out discrimination who
+
+
+
+
+
+
+outcomes1=['discrimination_who_1', 'discrimination_who_2', 'discrimination_who_3', 'discrimination_who_4', 'discrimination_who_5', 'discrimination_who_6', 'discrimination_who_7', 'discrimination_who_8', 'discrimination_who_9']
+print(outcomes1)
+#not properly recoded, assuming 0 actually means 1. 
+for c in outcomes1:
+     print(clean[c].value_counts(dropna=False))
+     clean[c]=clean[c].cat.codes.map({-1:np.nan,0:0, 1:1})
+
+
+fig, axes = plt.subplots(nrows=2, ncols=8, sharey='row', sharex='col', figsize=(
+    6.25, 3), gridspec_kw={'height_ratios': [1, 7]})
+titleaxes = fig.axes[:8]
+# title row.
+for i, (ax, group) in enumerate(zip(titleaxes, groupnames.keys())):
+    ax = titleaxes[i]
+    ax.annotate(groupnames[group], **title_anno_opts, color=gr_title_coldict[group])
+    # remove spines
+    ax.axis('off')
+
+outcomeaxis1=fig.axes[8:16]
+
+data = outcome_bygroup_df(clean, outcomes1, groupbyvars)
+for i, (ax, group) in enumerate(zip(outcomeaxis1, data.columns)):
+    ax = outcomeaxis1[i]
+    ax.set_xlim(0, 1)
+    ax.barh(y=data.index, width=data[group], color=gr_title_coldict[group])
+    # labels
+    for p in ax.patches:
+        # get_width pulls left or right; get_y pushes up or down
+        ax.text(p.get_width()+0.05, p.get_y()+0.5, "{:.0%}".format(
+            p.get_width()), color=p.get_facecolor(), verticalalignment='top', size='xx-small')
+    #if i == 0:
+        #ax.set_ylabel('precondition:', fontstyle='oblique')
+    # x-axis settings
+    ax.set_xlim(0, 1)
+    ax.xaxis.set_major_formatter(PercentFormatter(xmax=1))
+    # ticklabels
+    for label in ax.get_xticklabels():
+        label.set_ha("center")
+        label.set_rotation(90)
+        label.set_size('x-small')
+    sns.despine(ax=ax)
+
+fig.align_ylabels(fig.axes)
+#footnote
+fig.text(0, -0.1, "Source: Socio-economic impacts of COVID-19 among migrant workers in Laos, total n=" +
+            str(len(clean.loc[:,outcomes1[-1]].dropna()))+".", size='x-small',  ha="left", color='gray')
+fig.subplots_adjust(wspace = 0.5)
+fig.savefig(graphs_path/'discrimination_who.svg', bbox_inches='tight')
+
+###	out_cope_nonfinance_who_1 out_cope_nonfinance_who_2 out_cope_nonfinance_who_3 out_cope_nonfinance_who_4 with answers on y axis
+
+
+
+outcomes1=[c for c in clean.columns if 'out_cope_nonfinance_who' in c]
+print(outcomes1)
+
+for c in outcomes1:
+     print(clean[c].value_counts(dropna=False))
+     clean[c]=clean[c].cat.codes.map({-1:np.nan,0:0, 1:1})
+
+
+fig, axes = plt.subplots(nrows=2, ncols=8, sharey='row', sharex='col', figsize=(
+    6.25, 3), gridspec_kw={'height_ratios': [1, 7]})
+titleaxes = fig.axes[:8]
+# title row.
+for i, (ax, group) in enumerate(zip(titleaxes, groupnames.keys())):
+    ax = titleaxes[i]
+    ax.annotate(groupnames[group], **title_anno_opts, color=gr_title_coldict[group])
+    # remove spines
+    ax.axis('off')
+
+outcomeaxis1=fig.axes[8:16]
+
+data = outcome_bygroup_df(clean, outcomes1, groupbyvars)
+for i, (ax, group) in enumerate(zip(outcomeaxis1, data.columns)):
+    ax = outcomeaxis1[i]
+    ax.set_xlim(0, 1)
+    ax.barh(y=data.index, width=data[group], color=gr_title_coldict[group])
+    # labels
+    for p in ax.patches:
+        # get_width pulls left or right; get_y pushes up or down
+        ax.text(p.get_width()+0.05, p.get_y()+0.5, "{:.0%}".format(
+            p.get_width()), color=p.get_facecolor(), verticalalignment='top', size='xx-small')
+    #if i == 0:
+        #ax.set_ylabel('precondition:', fontstyle='oblique')
+    # x-axis settings
+    ax.set_xlim(0, 1)
+    ax.xaxis.set_major_formatter(PercentFormatter(xmax=1))
+    # ticklabels
+    for label in ax.get_xticklabels():
+        label.set_ha("center")
+        label.set_rotation(90)
+        label.set_size('x-small')
+    sns.despine(ax=ax)
+
+fig.align_ylabels(fig.axes)
+#footnote
+fig.text(0, -0.1, "Source: Socio-economic impacts of COVID-19 among migrant workers in Laos, total n=" +
+            str(len(clean.loc[:,outcomes1[-1]].dropna()))+".", size='x-small',  ha="left", color='gray')
+fig.subplots_adjust(wspace = 0.5)
+fig.savefig(graphs_path/'out_cope_nonfinance_who.svg', bbox_inches='tight')
