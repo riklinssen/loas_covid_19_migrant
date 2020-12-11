@@ -48,9 +48,9 @@ gr_coldict = {
 ##########################FIlEPATHS##########
 currentwd_path = Path.cwd()
 data_path = currentwd_path / "data"
-cleandata_path = data_path/"clean"
+cleandata_path = Path(r"C:\Users\RikL\Box\ONL-IMK\2.0 Projects\Current\2020-07 Covid-19 Informal workers Laos\07. Data\Clean")
 labels_path = currentwd_path.parent/"docs"
-graphs_path = currentwd_path/"graphs"
+graphs_path = Path(r"C:\Users\RikL\Box\ONL-IMK\2.0 Projects\Current\2020-07 Covid-19 Informal workers Laos\07. Data\Graphs")
 
 
 clean = pd.read_stata(
